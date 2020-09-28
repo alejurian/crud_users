@@ -1,0 +1,24 @@
+.sectionSearch {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.sectionSearch > input {
+  margin-right: 20px;
+}
+
+.sectionTable {
+  max-width: 100vw;
+  overflow-x: auto;
+}
+
+.buttonCreate {
+  height: 35px;
+}
+
+.sectionCreate {
+  display: grid;
+  justify-content: right;
+  padding-bottom: 15px;
+}

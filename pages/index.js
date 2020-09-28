@@ -1,65 +1,159 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { Component, Fragment } from 'react'
+import Link from 'next/link'
+import { withTranslation } from 'react-i18next'
+import { getUsers, deleteUser } from '../utils/api'
+import Table from '../components/Table'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import styles from '../styles/ListUsers.module.css'
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+class ListUsers extends Component {
+  constructor(props) {
+    super()
+    const { t } = props
+    this.state = {
+      users: [],
+      headers: [
+        {
+          text: t('name'),
+          value: 'name',
+          link: true,
+          sort: true,
+        },
+        {
+          text: t('username'),
+          value: 'username',
+          link: true,
+          sort: true,
+        },
+        {
+          text: t('email'),
+          value: 'email',
+          link: true,
+          sort: true,
+        },
+        {
+          text: t('address'),
+          value: 'address.city',
+          sort: true,
+        },
+        {
+          text: t('phone'),
+          value: 'phone',
+          sort: true,
+        },
+        {
+          text: t('website'),
+          value: 'website',
+          sort: true,
+        },
+        {
+          text: t('company'),
+          value: 'company.name',
+          sort: true,
+        },
+        {
+          text: t('delete'),
+          remove: true,
+        },
+      ],
+      pagination: {
+        sortBy: 'name',
+        sortDesc: true,
+        search: '',
+      },
+      loading: false,
+    }
+  }
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+  componentDidMount() {
+    this.getAllUsers()
+  }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  getAllUsers = async () => {
+    const { pagination } = this.state
+    this.setState({ loading: true })
+    const { users } = await getUsers(pagination)
+    this.setState({ users, loading: false })
+  }
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+  handleSort = (sortBy, sortDesc) => {
+    const { pagination } = this.state
+    this.setState(
+      {
+        pagination: {
+          ...pagination,
+          sortBy,
+          sortDesc: pagination.sortBy !== sortBy ? true : sortDesc,
+        },
+      },
+      () => {
+        this.getAllUsers()
+      }
+    )
+  }
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+  handleSearch = ({ charCode, target }) => {
+    if (charCode === 13) {
+      return this.getAllUsers()
+    }
+    const { pagination } = this.state
+    this.setState({ pagination: { ...pagination, search: target.value } })
+  }
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+  handleRemove = async (userId) => {
+    const { t } = this.props
+    const remove = confirm(t('are you sure'))
+    if (remove) {
+      const { user: success } = await deleteUser(userId)
+      if (success) {
+        alert(t('success delete'))
+        this.getAllUsers()
+      } else {
+        alert(t('error delete'))
+      }
+    }
+  }
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+  render() {
+    const {
+      handleSort,
+      state,
+      getAllUsers,
+      handleSearch,
+      handleRemove,
+      props,
+    } = this
+    const { headers, users, pagination, loading } = state
+    const { t } = props
+    return (
+      <Fragment>
+        <section className={styles.sectionSearch}>
+          <Input
+            value={pagination.search}
+            handleChange={handleSearch}
+            name={'search'}
+          />
+          <Button handleClick={getAllUsers} text={t('search')}></Button>
+        </section>
+        <section className={styles.sectionCreate}>
+          <Link href="/create">
+            <button className={styles.buttonCreate}>{t('create')}</button>
+          </Link>
+        </section>
+        <section className={styles.sectionTable}>
+          <Table
+            headers={headers}
+            users={users}
+            pagination={pagination}
+            loading={loading}
+            handleSort={handleSort}
+            handleRemove={handleRemove}
+          />
+        </section>
+      </Fragment>
+    )
+  }
 }
+
+export default withTranslation()(ListUsers)

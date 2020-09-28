@@ -1,0 +1,38 @@
+.header {
+  display: grid;
+  grid-template-columns: auto auto;
+  background-color: #ddd;
+  align-items: center;
+  padding-left: 20px;
+  height: 70px;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.headerNavbar {
+  display: flex;
+  justify-content: center;
+}
+
+.headerNavbar > ul {
+  display: flex;
+}
+
+.headerNavbar > ul > li {
+  list-style-type: none;
+  margin: 0 10px;
+}
+
+.headerTitle {
+  margin: 0;
+}
+
+.headerLink {
+  text-decoration: none;
+  color: rgb(73, 73, 73);
+  cursor: pointer;
+}
+
+.headerLink:hover {
+  color: black;
+}

@@ -1,0 +1,66 @@
+.table {
+  --light-gray-color: #ddd;
+  --border-line-style: 1px solid;
+  --black-color: black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th {
+  text-align: left;
+  border-top: var(--border-line-style) var(--light-gray-color);
+  border-bottom: var(--border-line-style) var(--light-gray-color);
+  background-color: rgb(245, 245, 245);
+  color: rgb(77, 77, 77);
+  cursor: pointer;
+}
+
+.table th:hover {
+  color: var(--black-color);
+}
+
+.table th:first-child {
+  border-left: var(--border-line-style) var(--light-gray-color);
+}
+
+.table th:last-child {
+  border-right: var(--border-line-style) var(--light-gray-color);
+}
+
+.table td,
+.table th {
+  padding: 10px;
+}
+
+.table td {
+  border: var(--border-line-style) var(--light-gray-color);
+}
+
+.tableSort,
+.tableSortSelected,
+.tableSortDesc {
+  cursor: pointer;
+  margin-left: 5px;
+  transition: transform 0.2s linear;
+  display: flex;
+}
+
+.tableSortSelected {
+  color: var(--black-color);
+}
+
+th > div:not(.tableSortSelected) > div {
+  color: var(--light-gray-color);
+}
+
+th:hover > div:not(.tableSortSelected) > div {
+  color: var(--black-color);
+}
+
+.tableSortDesc {
+  transform: rotate(0.5turn);
+}
+
+.tableLoading {
+  text-align: center;
+}

@@ -1,0 +1,19 @@
+.container {
+  display: grid;
+  grid-template-columns: 25% 1fr 25%;
+  gap: 20px;
+}
+
+.container > section > input {
+  width: 100%;
+}
+
+.containerButton {
+  text-align: center;
+}
+
+.containerButton > button {
+  width: 50%;
+  margin-top: 20px;
+  height: 30px;
+}
